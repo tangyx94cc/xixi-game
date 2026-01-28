@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>西西闯关</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FDFBF7;
+      --card: #FFFFFF;
+      --primary: #F08080;
+      --secondary: #87CEEB;
+      --text: #4A4A4A;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Nunito", "Quicksand", "Helvetica Rounded", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .wrap {
+      width: min(520px, 100%);
+      text-align: center;
+    }
+
+    .dogs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .dogs img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      object-fit: cover;
+      background: #fff;
+      transition: filter 0.3s ease;
+    }
+
+    .dogs.annoyed img { filter: grayscale(100%); }
+
+    .bubble {
+      min-height: 24px;
+      margin: 8px 0 16px;
+      font-size: 0.95rem;
+      color: var(--primary);
+      padding: 6px 10px;
+      display: inline-block;
+      border-radius: 999px;
+      background: rgba(240, 128, 128, 0.12);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .bubble.show { opacity: 1; transform: translateY(0); }
+
+    .card {
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-radius: 20px;
+      padding: 24px 20px 22px;
+      border: 2px solid rgba(240, 128, 128, 0.2);
+    }
+
+    .title {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .question {
+      font-size: 1.1rem;
+      margin: 12px 0 16px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    input[type="text"] {
+      flex: 1 1 220px;
+      max-width: 320px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid rgba(240, 128, 128, 0.4);
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(240, 128, 128, 0.15);
+    }
+
+    input[type="text"].error {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+      animation: shake 0.35s linear;
+    }
+
+    button {
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 1rem;
+      padding: 12px 18px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover { transform: translateY(-1px); box-shadow: 0 6px 14px rgba(240, 128, 128, 0.25); }
+
+    .progress {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      color: #9a8f8f;
+    }
+
+    .final {
+      display: none;
+      font-family: "Dancing Script", cursive;
+      font-size: clamp(3rem, 8vw, 4.5rem);
+      color: var(--primary);
+      animation: fadeIn 1s ease forwards;
+      margin-top: 20px;
+    }
+
+    .hidden { display: none !important; }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; }
+      .question { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section id="game">
+      <div class="dogs" id="dogs">
+        <img src="./dog1.png" alt="dog1" />
+        <img src="./dog2.png" alt="dog2" />
+        <img src="./dog3.png" alt="dog3" />
+        <img src="./dog4.png" alt="dog4" />
+        <img src="./dog5.png" alt="dog5" />
+      </div>
+      <div class="bubble" id="bubble"></div>
+
+      <div class="card" id="card">
+        <h1 class="title">西西闯关</h1>
+        <div class="question" id="question"></div>
+        <div class="input-row">
+          <input id="answer" type="text" placeholder="" autocomplete="off" />
+          <button id="submit">闯关</button>
+        </div>
+        <div class="progress" id="progress"></div>
+      </div>
+    </section>
+
+    <div class="final" id="final">happy dog, happy life</div>
+  </main>
+
+  <audio id="success-audio" src=""></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    const questions = [
+      { q: "和西西第一次说话的时间是", a: "250120", hint: "6位数字" },
+      { q: "西西是什么mbti", a: "enfj", hint: "4位字母" },
+      { q: "西西最喜欢吃什么", a: "鸡", hint: "一个字" },
+      { q: "西西喜欢夏天还是冬天", a: "冬天", hint: "略略略" },
+      { q: "西西最喜欢什么颜色", a: "蓝色", hint: "家里有" },
+      { q: "西西现在最想要什么", a: "戒指", hint: "略略" }
+    ];
+
+    const roasts = [
+      "这都不知道？",
+      "今晚睡沙发！",
+      "西西要生气了😠",
+      "用心点好吗"
+    ];
+
+    const questionEl = document.getElementById("question");
+    const answerEl = document.getElementById("answer");
+    const submitEl = document.getElementById("submit");
+    const progressEl = document.getElementById("progress");
+    const bubbleEl = document.getElementById("bubble");
+    const dogsEl = document.getElementById("dogs");
+    const cardEl = document.getElementById("card");
+    const finalEl = document.getElementById("final");
+    const audioEl = document.getElementById("success-audio");
+
+    let index = 0;
+
+    function renderQuestion() {
+      const item = questions[index];
+      questionEl.textContent = item.q;
+      answerEl.value = "";
+      answerEl.placeholder = item.hint;
+      progressEl.textContent = `第 ${index + 1} / ${questions.length} 题`;
+      bubbleEl.classList.remove("show");
+      bubbleEl.textContent = "";
+    }
+
+    function normalize(str) {
+      return str.trim().toLowerCase();
+    }
+
+    function showBubble() {
+      const msg = roasts[Math.floor(Math.random() * roasts.length)];
+      bubbleEl.textContent = msg;
+      bubbleEl.classList.add("show");
+    }
+
+    function wrongAnswer() {
+      answerEl.classList.add("error");
+      dogsEl.classList.add("annoyed");
+      showBubble();
+      setTimeout(() => {
+        answerEl.classList.remove("error");
+        dogsEl.classList.remove("annoyed");
+      }, 1500);
+    }
+
+    function rightAnswer() {
+      if (audioEl && audioEl.src) {
+        audioEl.currentTime = 0;
+        audioEl.play().catch(() => {});
+      }
+
+      const colors = ["#F08080", "#87CEEB"];
+      confetti({
+        particleCount: 120,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors
+      });
+
+      setTimeout(() => {
+        index += 1;
+        if (index >= questions.length) {
+          endGame();
+        } else {
+          renderQuestion();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      document.getElementById("game").classList.add("hidden");
+      finalEl.style.display = "block";
+    }
+
+    function checkAnswer() {
+      const item = questions[index];
+      if (!item) return;
+      const user = normalize(answerEl.value);
+      const correct = normalize(item.a);
+      if (user === correct) {
+        rightAnswer();
+      } else {
+        wrongAnswer();
+      }
+    }
+
+    submitEl.addEventListener("click", checkAnswer);
+    answerEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAnswer();
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>

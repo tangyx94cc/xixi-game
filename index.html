@@ -198,14 +198,16 @@
         radial-gradient(circle at 18% 78%, rgba(240, 128, 128, 0.18) 0 8px, transparent 9px),
         radial-gradient(circle at 82% 82%, rgba(135, 206, 235, 0.18) 0 8px, transparent 9px),
         radial-gradient(circle at 50% 10%, rgba(240, 128, 128, 0.12) 0 18px, transparent 19px),
-        radial-gradient(circle at 50% 90%, rgba(135, 206, 235, 0.12) 0 18px, transparent 19px);
+        radial-gradient(circle at 50% 90%, rgba(135, 206, 235, 0.12) 0 18px, transparent 19px),
+        repeating-linear-gradient(45deg, rgba(240, 128, 128, 0.08) 0 8px, transparent 8px 18px),
+        repeating-linear-gradient(-45deg, rgba(135, 206, 235, 0.06) 0 10px, transparent 10px 22px);
       opacity: 0.9;
     }
 
     .final::after {
       border: 1.5px solid rgba(240, 128, 128, 0.35);
-      box-shadow: 0 0 28px rgba(240, 128, 128, 0.18), 0 0 40px rgba(135, 206, 235, 0.12);
-      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), transparent 62%);
+      box-shadow: 0 8px 18px rgba(240, 128, 128, 0.12);
+      background: transparent;
     }
 
     .hidden { display: none !important; }
@@ -346,21 +348,21 @@
           particleCount: 14,
           spread: 100,
           startVelocity: 50,
-          origin: { x: 0, y: 0.2 },
+          origin: { x: 0.5, y: 0.5 },
           colors
         });
         confetti({
           particleCount: 14,
           spread: 100,
           startVelocity: 50,
-          origin: { x: 1, y: 0.2 },
+          origin: { x: 0.5, y: 0.5 },
           colors
         });
         confetti({
           particleCount: 12,
           spread: 120,
           startVelocity: 45,
-          origin: { x: 0.5, y: 0.05 },
+          origin: { x: 0.5, y: 0.5 },
           colors
         });
         if (Date.now() < end) requestAnimationFrame(frame);

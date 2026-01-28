@@ -53,6 +53,14 @@
       transition: filter 0.3s ease;
     }
 
+    .dogs img.wiggle {
+      animation: wiggle 0.45s ease-in-out;
+    }
+
+    .dogs img.blink {
+      animation: blink 0.35s ease-in-out;
+    }
+
     .dogs.annoyed img { filter: grayscale(100%); }
 
     .bubble {
@@ -147,6 +155,34 @@
       color: var(--primary);
       animation: fadeIn 1s ease forwards;
       margin-top: 20px;
+      position: relative;
+      padding: 18px 16px;
+    }
+
+    .final::before,
+    .final::after {
+      content: "";
+      position: absolute;
+      inset: -24px -18px;
+      border-radius: 26px;
+      pointer-events: none;
+    }
+
+    .final::before {
+      background:
+        radial-gradient(circle at 12% 24%, rgba(240, 128, 128, 0.22) 0 9px, transparent 10px),
+        radial-gradient(circle at 88% 18%, rgba(135, 206, 235, 0.22) 0 10px, transparent 11px),
+        radial-gradient(circle at 18% 78%, rgba(240, 128, 128, 0.18) 0 8px, transparent 9px),
+        radial-gradient(circle at 82% 82%, rgba(135, 206, 235, 0.18) 0 8px, transparent 9px),
+        radial-gradient(circle at 50% 10%, rgba(240, 128, 128, 0.12) 0 18px, transparent 19px),
+        radial-gradient(circle at 50% 90%, rgba(135, 206, 235, 0.12) 0 18px, transparent 19px);
+      opacity: 0.9;
+    }
+
+    .final::after {
+      border: 1.5px solid rgba(240, 128, 128, 0.35);
+      box-shadow: 0 0 28px rgba(240, 128, 128, 0.18), 0 0 40px rgba(135, 206, 235, 0.12);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6), transparent 62%);
     }
 
     .hidden { display: none !important; }
@@ -162,6 +198,19 @@
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes wiggle {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(-6deg); }
+      50% { transform: rotate(6deg); }
+      75% { transform: rotate(-4deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    @keyframes blink {
+      0%, 100% { transform: scaleY(1); }
+      45%, 55% { transform: scaleY(0.1); }
     }
 
     @media (max-width: 480px) {
@@ -265,12 +314,31 @@
       }
 
       const colors = ["#F08080", "#87CEEB"];
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors
-      });
+      const end = Date.now() + 900;
+      (function frame() {
+        confetti({
+          particleCount: 14,
+          spread: 100,
+          startVelocity: 50,
+          origin: { x: 0, y: 0.2 },
+          colors
+        });
+        confetti({
+          particleCount: 14,
+          spread: 100,
+          startVelocity: 50,
+          origin: { x: 1, y: 0.2 },
+          colors
+        });
+        confetti({
+          particleCount: 12,
+          spread: 120,
+          startVelocity: 45,
+          origin: { x: 0.5, y: 0.05 },
+          colors
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
 
       setTimeout(() => {
         index += 1;
@@ -302,6 +370,18 @@
     submitEl.addEventListener("click", checkAnswer);
     answerEl.addEventListener("keydown", (e) => {
       if (e.key === "Enter") checkAnswer();
+    });
+
+    dogsEl.querySelectorAll("img").forEach((img) => {
+      img.addEventListener("click", () => {
+        const r = Math.random();
+        const cls = r < 0.5 ? "wiggle" : "blink";
+        img.classList.remove("wiggle", "blink");
+        // Force reflow to restart animation
+        void img.offsetWidth;
+        img.classList.add(cls);
+        setTimeout(() => img.classList.remove(cls), 500);
+      });
     });
 
     renderQuestion();

@@ -721,23 +721,35 @@
         function Seat({ idx, tableId, data, onChange, pos, onSeatDragStart, onSeatDrop, onSeatDragEnd }) {
             const key = `${tableId}-${idx}`;
             const seatValue = data[key] || '';
+            const seatBadge = (
+                <div
+                    className={`w-8 h-7 rounded-sm border shadow-sm flex items-center justify-center text-[10px] font-bold ${seatValue ? 'bg-blue-500 border-blue-600 text-white cursor-move' : 'bg-white border-stone-300'}`}
+                    draggable={Boolean(seatValue.trim())}
+                    onDragStart={e => onSeatDragStart(e, tableId, idx)}
+                    onDragOver={e => e.preventDefault()}
+                    onDrop={e => onSeatDrop(e, tableId, idx)}
+                    onDragEnd={onSeatDragEnd}
+                >
+                    {idx + 1}
+                </div>
+            );
+            const nameInput = (
+                <input
+                    type="text"
+                    value={seatValue}
+                    onChange={e => onChange(tableId, idx, e.target.value)}
+                    placeholder="姓名"
+                    className="w-16 text-center text-xs border border-stone-200 rounded py-1 px-0.5 focus:border-blue-500 outline-none"
+                />
+            );
 
             return (
                 <div
-                    className={`flex flex-col items-center gap-1 ${pos === 'bottom' ? 'flex-col-reverse' : ''}`}
+                    className="flex flex-col items-center gap-1"
                     title={seatValue.trim() ? '拖拽座位号到另一个已安排宾客位置进行对换' : '空座位不可作为拖拽源'}
                 >
-                    <div
-                        className={`w-8 h-7 rounded-sm border shadow-sm flex items-center justify-center text-[10px] font-bold ${seatValue ? 'bg-blue-500 border-blue-600 text-white cursor-move' : 'bg-white border-stone-300'}`}
-                        draggable={Boolean(seatValue.trim())}
-                        onDragStart={e => onSeatDragStart(e, tableId, idx)}
-                        onDragOver={e => e.preventDefault()}
-                        onDrop={e => onSeatDrop(e, tableId, idx)}
-                        onDragEnd={onSeatDragEnd}
-                    >
-                        {idx + 1}
-                    </div>
-                    <input type="text" value={seatValue} onChange={e => onChange(tableId, idx, e.target.value)} placeholder="姓名" className="w-16 text-center text-xs border border-stone-200 rounded py-1 px-0.5 focus:border-blue-500 outline-none" />
+                    {pos === 'bottom' ? nameInput : seatBadge}
+                    {pos === 'bottom' ? seatBadge : nameInput}
                 </div>
             );
         }

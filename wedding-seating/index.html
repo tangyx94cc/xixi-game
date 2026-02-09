@@ -23,6 +23,7 @@
         const { useState, useEffect, useRef, useCallback } = React;
 
         const SLOT_COUNT = 5;
+        const FIXED_TOTAL_SEATS = 130;
         const SLOT_KEY_PREFIX = 'wedding_seating_slot_';
         const SLOT_META_KEY = 'wedding_seating_slots_meta';
         const ACTIVE_SLOT_KEY = 'wedding_seating_active_slot';
@@ -77,6 +78,15 @@
                 if (typeof v === 'string') {
                     next[k] = v;
                 }
+            });
+            return next;
+        }
+
+        function pruneRemovedTablesFromGuestData(guestData) {
+            const next = {};
+            Object.entries(guestData).forEach(([k, v]) => {
+                if (k.startsWith('t2-p1-')) return;
+                next[k] = v;
             });
             return next;
         }
@@ -157,12 +167,12 @@
                     const parsed = JSON.parse(raw);
                     if (parsed && typeof parsed === 'object' && parsed.guestData) {
                         return {
-                            guestData: normalizeGuestData(parsed.guestData),
+                            guestData: pruneRemovedTablesFromGuestData(normalizeGuestData(parsed.guestData)),
                             tableLayout: normalizeLayout(parsed.tableLayout)
                         };
                     }
                     return {
-                        guestData: normalizeGuestData(parsed),
+                        guestData: pruneRemovedTablesFromGuestData(normalizeGuestData(parsed)),
                         tableLayout: buildDefaultLayout()
                     };
                 } catch {
@@ -179,7 +189,7 @@
                     try {
                         const legacyParsed = JSON.parse(legacyRaw);
                         return {
-                            guestData: normalizeGuestData(legacyParsed),
+                            guestData: pruneRemovedTablesFromGuestData(normalizeGuestData(legacyParsed)),
                             tableLayout: buildDefaultLayout()
                         };
                     } catch {
@@ -201,7 +211,6 @@
             const [guestData, setGuestData] = useState({});
             const [tableLayout, setTableLayout] = useState(buildDefaultLayout());
             const [totalGuests, setTotalGuests] = useState(0);
-            const [totalSeats, setTotalSeats] = useState(countTotalSeats(buildDefaultLayout()));
             const [showModal, setShowModal] = useState(false);
             const [activeSlot, setActiveSlot] = useState(1);
             const [slotMeta, setSlotMeta] = useState({});
@@ -218,7 +227,7 @@
                 const safeSlot = normalizeSlot(slot);
                 try {
                     const payload = {
-                        guestData: normalizeGuestData(data),
+                        guestData: pruneRemovedTablesFromGuestData(normalizeGuestData(data)),
                         tableLayout: normalizeLayout(layout)
                     };
                     localStorage.setItem(getSlotKey(safeSlot), JSON.stringify(payload));
@@ -265,9 +274,7 @@
                 setTotalGuests(countFilledGuests(guestData));
             }, [guestData]);
 
-            useEffect(() => {
-                setTotalSeats(countTotalSeats(tableLayout));
-            }, [tableLayout]);
+            const totalSeats = FIXED_TOTAL_SEATS;
 
             useEffect(() => {
                 if (!hasLoadedRef.current) return;

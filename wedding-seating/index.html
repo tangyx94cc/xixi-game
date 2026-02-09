@@ -41,7 +41,7 @@
 
         const FLOOR_DATA = {
             floor1: { id: 1, name: "一楼 (1F)", description: "迎宾区 & 茶歇走廊", tables: [{ id: 't1-1', name: '包间 101', type: 'round', isPrivate: true, side: 'left' }, { id: 't1-2', name: '包间 102', type: 'round', isPrivate: true, side: 'right' }] },
-            floor2: { id: 2, name: "二楼 (2F)", description: "宴会主厅", longTables: [{ id: 't2-long-1', name: '长条桌 A', type: 'long', isPrivate: false }, { id: 't2-long-2', name: '长条桌 B', type: 'long', isPrivate: false }], roundTables: [{ id: 't2-1', name: '主厅 01', type: 'round', isPrivate: false }, { id: 't2-2', name: '主厅 02', type: 'round', isPrivate: false }, { id: 't2-3', name: '主厅 03', type: 'round', isPrivate: false }, { id: 't2-4', name: '主厅 04', type: 'round', isPrivate: false }], privateRooms: [{ id: 't2-p1', name: '包间 201', type: 'round', isPrivate: true }, { id: 't2-p2', name: '包间 202', type: 'round', isPrivate: true }] },
+            floor2: { id: 2, name: "二楼 (2F)", description: "宴会主厅", longTables: [{ id: 't2-long-1', name: '长条桌 A', type: 'long', isPrivate: false }, { id: 't2-long-2', name: '长条桌 B', type: 'long', isPrivate: false }], roundTables: [{ id: 't2-1', name: '主厅 01', type: 'round', isPrivate: false }, { id: 't2-2', name: '主厅 02', type: 'round', isPrivate: false }, { id: 't2-3', name: '主厅 03', type: 'round', isPrivate: false }, { id: 't2-4', name: '主厅 04', type: 'round', isPrivate: false }], privateRooms: [{ id: 't2-p2', name: '包间 202', type: 'round', isPrivate: true }] },
             floor3: { id: 3, name: "三楼 (3F)", description: "贵宾包间层", tables: [{ id: 't3-1', name: '包间 301', type: 'round', isPrivate: true }, { id: 't3-2', name: '包间 302', type: 'round', isPrivate: true }, { id: 't3-3', name: '包间 303', type: 'round', isPrivate: true }, { id: 't3-4', name: '包间 305', type: 'round', isPrivate: true }] }
         };
 
@@ -512,23 +512,11 @@
                                         />
                                     ))}
                                 </div>
-                                <div className="flex justify-between items-center px-4 md:px-12">
-                                    <div className="bg-amber-50/50 p-4 rounded-3xl border border-amber-100">
-                                        <RoundTable
-                                            table={tableLayout.floor2.privateRooms[0]}
-                                            groupPath="floor2.privateRooms"
-                                            data={guestData}
-                                            onChange={handleNameChange}
-                                            onSeatDragStart={handleSeatDragStart}
-                                            onSeatDrop={handleSeatDrop}
-                                            onSeatDragEnd={handleSeatDragEnd}
-                                            onTableNameCommit={handleTableNameCommit}
-                                        />
-                                    </div>
+                                <div className="flex justify-end items-center gap-8 px-4 md:px-12">
                                     <div className="hidden md:flex flex-col items-center text-stone-300 no-print"><div className="w-32 h-32 border-2 border-stone-100 rounded-full flex items-center justify-center text-xs">舞台区域</div></div>
                                     <div className="bg-amber-50/50 p-4 rounded-3xl border border-amber-100">
                                         <RoundTable
-                                            table={tableLayout.floor2.privateRooms[1]}
+                                            table={tableLayout.floor2.privateRooms[0]}
                                             groupPath="floor2.privateRooms"
                                             data={guestData}
                                             onChange={handleNameChange}

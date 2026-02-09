@@ -655,14 +655,14 @@
                                 key={i}
                                 className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-1 scale-90 print:scale-75"
                                 style={{ left: centerX + radius * Math.cos(rad), top: centerY + radius * Math.sin(rad) }}
-                                onDragOver={e => e.preventDefault()}
-                                onDrop={e => onSeatDrop(e, table.id, i)}
                                 title={seatValue.trim() ? '拖拽座位号到另一个已安排宾客位置进行对换' : '空座位不可作为拖拽源'}
                             >
                                 <div
                                     className={`w-8 h-8 rounded-full shadow-sm border flex items-center justify-center text-xs font-bold ${seatValue ? 'bg-rose-500 border-rose-600 text-white cursor-move' : 'bg-white border-stone-300'}`}
                                     draggable={Boolean(seatValue.trim())}
                                     onDragStart={e => onSeatDragStart(e, table.id, i)}
+                                    onDragOver={e => e.preventDefault()}
+                                    onDrop={e => onSeatDrop(e, table.id, i)}
                                     onDragEnd={onSeatDragEnd}
                                 >
                                     {i + 1}
@@ -725,14 +725,14 @@
             return (
                 <div
                     className={`flex flex-col items-center gap-1 ${pos === 'bottom' ? 'flex-col-reverse' : ''}`}
-                    onDragOver={e => e.preventDefault()}
-                    onDrop={e => onSeatDrop(e, tableId, idx)}
                     title={seatValue.trim() ? '拖拽座位号到另一个已安排宾客位置进行对换' : '空座位不可作为拖拽源'}
                 >
                     <div
                         className={`w-8 h-7 rounded-sm border shadow-sm flex items-center justify-center text-[10px] font-bold ${seatValue ? 'bg-blue-500 border-blue-600 text-white cursor-move' : 'bg-white border-stone-300'}`}
                         draggable={Boolean(seatValue.trim())}
                         onDragStart={e => onSeatDragStart(e, tableId, idx)}
+                        onDragOver={e => e.preventDefault()}
+                        onDrop={e => onSeatDrop(e, tableId, idx)}
                         onDragEnd={onSeatDragEnd}
                     >
                         {idx + 1}
